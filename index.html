@@ -74,7 +74,7 @@ nav .full,nav .n{display:none}nav .sh{display:block}nav .ic{font-size:1.2rem}
 const SEC=[['dx','Diagnosis','🩺','Diagnosis'],['first','First Report','📄','First'],['treat','Treatment Reports','💊','Treatment'],['rx','Prescriptions','℞','Rx'],['img','CT Scans & MRIs','🧠','CT / MRI'],['uae','Doctor Consults – UAE','🇦🇪','UAE'],['pk','Doctor Consults – Pakistan','🇵🇰','Pakistan'],['o1','Others 1','📁','Other 1'],['o2','Others 2','📁','Other 2'],['o3','Others 3','📁','Other 3']];
 const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],$=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const fd=d=>{const m=/^(\d{4})-(\d\d)-(\d\d)/.exec(d||'');return m?m[3]+'-'+MON[+m[2]-1]+'-'+m[1]:'No date'};
-let cfg={name:'Momina Haseeb',dx:'Craniopharyngioma',dob:'',key:'',url:'',pin:'',names:{},auto:true,...JSON.parse(localStorage.getItem('cfg')||'{}')};
+let cfg={name:'Mominah Haseeb Mirza',dx:'Craniopharyngioma',dob:'',key:'',url:'',pin:'',names:{},auto:true,...JSON.parse(localStorage.getItem('cfg')||'{}')};
 const sv=()=>localStorage.setItem('cfg',JSON.stringify(cfg)),sn=id=>cfg.names[id]||SEC.find(s=>s[0]===id)[1];
 let R=[],card={},cur='card',edit=false,U={};
 /* online storage: Google Sheet + Drive through your Apps Script */
@@ -98,7 +98,7 @@ return (cfg.url&&cfg.pin?'':`<div class="warn"><b>Online storage is not connecte
 (cur==='pk'?pkStrip():'')+(L.length?`<div class="grid">${L.map(r=>`<div class="card" onclick="openRec('${r.id}')"><div class="th">${r.thumb?`<img src="${r.thumb}" alt="">`:isPdf(r)?'PDF':'🖼'}</div><div class="in"><b>${esc(r.title)}</b><small>${fd(r.date)}${cur==='all'?' · '+esc(sn(r.sec)):''}</small></div></div>`).join('')}</div>`:`<div class="empty">No records here yet.<br>Tap <b>Scan</b> to photograph a page, or <b>Upload</b> to add many images and PDFs at once.</div>`)}
 function renameSec(){const v=(prompt('New name for this section',sn(cur))||'').trim();if(v){cfg.names[cur]=v;sv();render()}}
 /* emergency card */
-const CF=[['blood','Blood group'],['allergies','Allergies'],['dxd','Diagnosis details (date, hospital)'],['father',"Father's name"],['fphone',"Father's phone"],['mother',"Mother's name"],['mphone',"Mother's phone"],['home','Home address'],['loc','Home location (Google Maps link)'],['school','School name'],['saddr','School address'],['sphone','School phone'],['note','Other important notes']];
+const CF=[['birth','Place of birth'],['nic','CNIC / B-Form number'],['blood','Blood group'],['wt','Weight (kg) – update often'],['allergies','Allergies'],['alert','Medical alerts for emergency staff'],['hosp','Main treating hospital and file / MRN number'],['dxd','Diagnosis details (date, hospital)'],['father',"Father's name"],['fphone',"Father's phone"],['mother',"Mother's name"],['mphone',"Mother's phone"],['rel','Another emergency contact (name and phone)'],['home','Home address'],['loc','Home location (Google Maps link)'],['school','School name'],['saddr','School address'],['sphone','School phone'],['note','Other important notes']];
 const lines=t=>(t||'').split('\n').map(x=>x.trim()).filter(Boolean).map(x=>x.split('|').map(s=>s.trim()));
 const tel=p=>p?`<a href="tel:${esc(p.replace(/[^+\d]/g,''))}">${esc(p)}</a>`:'—';
 const kv=(k,v)=>`<span>${k}</span><b>${v||'—'}</b>`;
@@ -106,14 +106,14 @@ function tbl(head,rows,phoneCol){return rows.length?`<table><tr>${head.map(h=>`<
 function cardView(){const c=card,loc=/^https?:/.test(c.loc||'')?`<a href="${esc(c.loc)}" target="_blank">Open in Maps</a>`:esc(c.loc);
 return `<div class="bar"><h2>Emergency Card</h2><button class="btn g" onclick="edit=true;render()">Edit</button><button class="btn" onclick="window.print()">Print / Save as PDF</button></div>
 <div class="sheet"><h3>EMERGENCY MEDICAL CARD</h3>
-<h4>Patient</h4><div class="kv">${kv('Name',esc(cfg.name))}${kv('Age',esc(age().replace('Age: ','')))}${kv('Diagnosis',esc(cfg.dx))}${kv('Details',esc(c.dxd))}${kv('Blood group',esc(c.blood))}${kv('Allergies',esc(c.allergies))}</div>
+<h4>Patient</h4><div class="kv">${kv('Name',esc(cfg.name))}${kv('Date of birth',cfg.dob?fd(cfg.dob):'')}${kv('Age',esc(age().replace('Age: ','').replace(/ · Born.*/,'')))}${kv('Place of birth',esc(c.birth))}${kv('CNIC / B-Form',esc(c.nic))}${kv('Diagnosis',esc(cfg.dx))}${kv('Details',esc(c.dxd))}${kv('Blood group',esc(c.blood))}${kv('Weight',c.wt?esc(c.wt)+' kg':'')}${kv('Allergies',esc(c.allergies))}${kv('Medical alerts',esc(c.alert).replace(/\n/g,'<br>'))}${kv('Main hospital',esc(c.hosp))}</div>
 <h4>Current medicines</h4>${tbl(['Medicine','Dose','When'],lines(c.meds))}
 <h4>Doctors who have checked her</h4>${tbl(['Doctor','Hospital / country','Phone'],lines(c.docs),2)}
-<h4>Parents</h4><div class="kv">${kv('Father',esc(c.father))}${kv('Father phone',tel(c.fphone))}${kv('Mother',esc(c.mother))}${kv('Mother phone',tel(c.mphone))}</div>
+<h4>Parents</h4><div class="kv">${kv('Father',esc(c.father))}${kv('Father phone',tel(c.fphone))}${kv('Mother',esc(c.mother))}${kv('Mother phone',tel(c.mphone))}${kv('Other contact',esc(c.rel))}</div>
 <h4>Home and school</h4><div class="kv">${kv('Home',esc(c.home))}${kv('Home location',loc)}${kv('School',esc(c.school))}${kv('School address',esc(c.saddr))}${kv('School phone',tel(c.sphone))}</div>
 <h4>Other notes</h4><div class="kv">${kv('Notes',esc(c.note).replace(/\n/g,'<br>'))}</div></div>
 <p class="mu">Last saved copy stays readable on this phone even without internet.</p>`}
-function cardForm(){return `<div class="bar"><h2>Edit Emergency Card</h2></div><div class="form">${CF.map(([k,l])=>`<label>${l}${k==='note'?`<textarea id="c_${k}" rows="3">${esc(card[k])}</textarea>`:`<input type="text" id="c_${k}" value="${esc(card[k])}">`}</label>`).join('')}
+function cardForm(){return `<div class="bar"><h2>Edit Emergency Card</h2></div><div class="form">${CF.map(([k,l])=>`<label>${l}${['note','alert'].includes(k)?`<textarea id="c_${k}" rows="3">${esc(card[k])}</textarea>`:`<input type="text" id="c_${k}" value="${esc(card[k])}">`}</label>`).join('')}
 <label>Current medicines – one per line: Medicine | Dose | When<textarea id="c_meds" rows="6" placeholder="Hydrocortisone | 5 mg | Morning">${esc(card.meds)}</textarea></label>
 <label>Doctors – one per line: Name | Hospital / country | Phone<textarea id="c_docs" rows="5" placeholder="Dr Name | Hospital, UAE | +971...">${esc(card.docs)}</textarea></label>
 <div class="bar" style="border:0"><button class="btn" onclick="saveCard()">Save card</button><button class="btn g" onclick="edit=false;render()">Cancel</button></div></div>`}
@@ -233,6 +233,9 @@ if(j.error)throw new Error(j.error.message);let text=j.content.filter(c=>c.type=
 if(skipped.length)text+='\n\nNot read (too large or unreadable): '+skipped.join(', ');
 card._an=card._an||{};card._an[kind]={date:new Date().toISOString().slice(0,10),text};render();pc()}catch(e){st.textContent='Analysis failed: '+e.message}}
 
+/* first-time patient details */
+const SEED={name:'Mominah Haseeb Mirza',dob:'2012-07-31',card:{birth:'Lahore',father:'Haseeb Mirza',fphone:'0345-2104860',mother:'Maria Haseeb Mirza',mphone:'0331-8696222',school:'7Cs School',saddr:'Gulshan-e-Ravi, Lahore'}};
+function seed(){if(card._seed)return;if(cfg.name==='Momina Haseeb')cfg.name=SEED.name;if(!cfg.dob)cfg.dob=SEED.dob;sv();for(const k in SEED.card)if(!card[k])card[k]=SEED.card[k];card._seed=1;snap();if(cfg.url&&cfg.pin)pc()}
 /* add files */
 const guess=n=>{n=n.toLowerCase();return /mri|\bct\b|scan|x-?ray/.test(n)?'img':/presc|\brx\b/.test(n)?'rx':/uae|dubai|abu.?dhabi|sharjah/.test(n)?'uae':/diagnos/.test(n)?'dx':/first|initial/.test(n)?'first':/lab|treat|surgery|radio/.test(n)?'treat':null};
 const b64=f=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(f)});
@@ -260,6 +263,6 @@ try{const b=await getBlob(r),u=U[r.fid]||(U[r.fid]=URL.createObjectURL(b));if(!$
 const closeM=()=>$('#modal').className='';
 async function saveRec(id){const r=R.find(x=>x.id===id),o={...r};Object.assign(r,{title:$('#m1').value.trim()||r.title,date:$('#m2').value,sec:$('#m3').value,note:$('#m4').value});try{await api({a:'upd',id,sec:r.sec,title:r.title,date:r.date,note:r.note});snap();closeM();render();toast('Saved')}catch(e){Object.assign(r,o);toast('Not saved: '+e.message)}}
 async function delRec(id){if(!confirm('Delete this record and its file?'))return;try{await api({a:'del',id});const r=R.find(x=>x.id===id);tx('readwrite',s=>s.delete(r.fid));R=R.filter(x=>x.id!==id);snap();closeM();render()}catch(e){toast('Not deleted: '+e.message)}}
-(async()=>{const s=JSON.parse(localStorage.getItem('snap')||'{}');R=s.R||[];card=s.card||{};render();if(cfg.url&&cfg.pin){await load();render()}else cur='set',render()})();
+(async()=>{const s=JSON.parse(localStorage.getItem('snap')||'{}');R=s.R||[];card=s.card||{};seed();render();if(cfg.url&&cfg.pin){await load();seed();render()}else cur='set',render()})();
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 </script></body></html>
