@@ -1,5 +1,5 @@
 // Medical Records - service worker. Change CACHE when you upload a new index.html.
-const CACHE = 'medrec-v3';
+const CACHE = 'medrec-v7';
 const SHELL = ['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png', 'icon-maskable-512.png'];
 
 self.addEventListener('install', e => {

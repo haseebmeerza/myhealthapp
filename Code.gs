@@ -1,6 +1,6 @@
 // Medical Records backend. Paste into script.google.com, then Deploy > Web app.
 // Execute as: Me. Who has access: Anyone. It creates its own Drive folder + Google Sheet on first use.
-const PIN = 'jaja';
+const PIN = 'CHANGE-THIS-PIN';
 
 function env() {
   const p = PropertiesService.getScriptProperties();
