@@ -1,5 +1,5 @@
 // My Health App service worker. Network first, so changes on the website show up; cache is only for offline use.
-const CACHE = 'medrec-v9';
+const CACHE = 'medrec-v10';
 const SHELL = ['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png', 'icon-maskable-512.png'];
 
 self.addEventListener('install', e => {
