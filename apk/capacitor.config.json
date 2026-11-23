@@ -1,0 +1,9 @@
+{
+  "appId": "com.haseeb.myhealthapp",
+  "appName": "My Health App",
+  "webDir": "www",
+  "server": {
+    "url": "https://haseebmeerza.github.io/myhealthapp/",
+    "cleartext": false
+  }
+}
